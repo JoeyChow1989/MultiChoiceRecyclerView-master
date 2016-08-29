@@ -148,13 +148,33 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
             }
 
             if (multiChoiceSelectionListener != null)
-                multiChoiceSelectionListener.OnSelectAll(mSelectedList.size(), mAllList.size());
+                multiChoiceSelectionListener.OnDeselectAll(mSelectedList.size(), mAllList.size());
 
             return true;
         }
         return false;
     }
+    
+    public boolean inverseSelectAll() {
+        if (mMultiChoiceAdapter != null) {
 
+            performVibrate();
+
+            //select all the the view
+            Iterator it = mAllList.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<Integer, View> pair = (Map.Entry<Integer, View>) it.next();
+                int position=pair.getKey();
+                if(mSelectedList.containsKey(position)){
+                    performDeselect(pair.getValue(), position, true);
+                }else{
+                    performSelect(pair.getValue(), position, true);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Select all the view in the adapter
