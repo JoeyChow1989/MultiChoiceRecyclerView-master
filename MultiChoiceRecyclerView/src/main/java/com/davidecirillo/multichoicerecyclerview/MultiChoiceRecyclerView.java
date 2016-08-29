@@ -96,8 +96,8 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
         if (mSelectedList.size() == 0) {
             performVibrate();
 
-            performSingleClick(view, position);
         }
+        performSingleClick(view, position);
     }
 
 
@@ -148,13 +148,37 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
             }
 
             if (multiChoiceSelectionListener != null)
-                multiChoiceSelectionListener.OnSelectAll(mSelectedList.size(), mAllList.size());
+                multiChoiceSelectionListener.OnDeselectAll(mSelectedList.size(), mAllList.size());
 
             return true;
         }
         return false;
     }
 
+    public boolean inverseSelectAll() {
+        if (mMultiChoiceAdapter != null) {
+
+            performVibrate();
+
+            //select all the the view
+            Iterator it = mAllList.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<Integer, View> pair = (Map.Entry<Integer, View>) it.next();
+                int position = pair.getKey();
+                if (isSelected(position)) {
+                    performDeselect(pair.getValue(), position, false);
+                } else {
+                    performSelect(pair.getValue(), position, false);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isSelected(int position) {
+        return mSelectedList.containsKey(position);
+    }
 
     /**
      * Select all the view in the adapter
@@ -237,10 +261,8 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
     }
 
 
-
-
-
-    /************************************* PRIVATE METHODS **********************************
+    /*************************************
+     * PRIVATE METHODS **********************************
      */
 
     private void updateToolbarIfInMultiChoiceMode(int number) {
@@ -265,14 +287,14 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
     /**
      * Remeber to call this method before selecting or deselection something otherwise it wont vibrate
      */
-    private void performVibrate(){
-        if(mSelectedList.size() == 0) {
+    private void performVibrate() {
+        if (mSelectedList.size() == 0) {
             Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
             v.vibrate(100);
         }
     }
 
-    private void performSelect(View v, int position, boolean withCallback){
+    private void performSelect(View v, int position, boolean withCallback) {
         mMultiChoiceAdapter.performActivation(v, true);
         mSelectedList.put(position, v);
 
@@ -282,7 +304,7 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
             multiChoiceSelectionListener.OnItemSelected(position, mSelectedList.size(), mAllList.size());
     }
 
-    private void performDeselect(View v, int position, boolean withCallback){
+    private void performDeselect(View v, int position, boolean withCallback) {
         mMultiChoiceAdapter.performActivation(v, false);
         mSelectedList.remove(position);
 
@@ -291,10 +313,6 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
         if (multiChoiceSelectionListener != null && withCallback)
             multiChoiceSelectionListener.OnItemDeselected(position, mSelectedList.size(), mAllList.size());
     }
-
-
-
-
 
 
     /*********************************** GETTERS ********************************** */
@@ -339,7 +357,7 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
 
     /**
      * Enable the multi choice custom app compact toolbar.
-     * <p>
+     * <p/>
      * NB: Enable this feature only if providing a custom toolbar via setSupportActionBar in your application.
      *
      * @param appCompatActivity Activity that extends AppCompatActivity
@@ -352,7 +370,7 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
 
     /**
      * Enable the multi choice custom app compact toolbar.
-     * <p>
+     * <p/>
      * NB: Enable this feature only if providing a custom toolbar via setSupportActionBar in your application.
      *
      * @param appCompatActivity     Activity that extends AppCompatActivity
@@ -370,7 +388,7 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
 
     /**
      * Enable the multi choice custom app compact toolbar.
-     * <p>
+     * <p/>
      * NB: Enable this feature only if providing a custom toolbar via setSupportActionBar in your application.
      *
      * @param appCompatActivity        Activity that extends AppCompatActivity
@@ -393,7 +411,7 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
 
     /**
      * Enable the multi choice custom app compact toolbar.
-     * <p>
+     * <p/>
      * NB: Enable this feature only if providing a custom toolbar via setSupportActionBar in your application.
      *
      * @param appCompatActivity        Activity that extends AppCompatActivity
