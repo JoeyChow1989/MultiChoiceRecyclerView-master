@@ -166,9 +166,9 @@ public class MultiChoiceRecyclerView extends RecyclerView implements MultiChoice
                 Map.Entry<Integer, View> pair = (Map.Entry<Integer, View>) it.next();
                 int position=pair.getKey();
                 if(mSelectedList.containsKey(position)){
-                    performDeselect(pair.getValue(), position, true);
+                    performDeselect(pair.getValue(), position, false);
                 }else{
-                    performSelect(pair.getValue(), position, true);
+                    performSelect(pair.getValue(), position, false);
                 }
             }
             return true;
